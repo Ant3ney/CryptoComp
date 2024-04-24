@@ -51,13 +51,17 @@ App = {
   },
 
   initContract: function () {
-    $.getJSON("Adoption.json", function (data) {
+    $.getJSON("InterestAccrualContract.json", function (data) {
       // Get the necessary contract artifact file and instantiate it with @truffle/contract
-      var AdoptionArtifact = data;
-      App.contracts.Adoption = TruffleContract(AdoptionArtifact);
+      var IACArtifact = data;
+      App.contracts.IAC = TruffleContract(IACArtifact);
 
       // Set the provider for our contract
-      App.contracts.Adoption.setProvider(App.web3Provider);
+      App.contracts.IAC.setProvider(App.web3Provider);
+
+      App.getBallance();
+
+      setInterval(App.getBallance, 1000);
 
       // Use our contract to retrieve and mark the adopted pets
       return App.markAdopted();
@@ -68,18 +72,19 @@ App = {
 
   bindEvents: function () {
     $(document).on("click", ".btn-adopt", App.handleAdopt);
+    $(document).on("click", "#deposit_coin", App.depositETH);
   },
 
   markAdopted: function () {
-    var adoptionInstance;
+    /* var IACInstance;
 
-    App.contracts.Adoption.deployed()
+    App.contracts.IAC.deployed()
       .then(function (instance) {
-        adoptionInstance = instance;
+        IACInstance = instance;
 
-        return adoptionInstance.getAdopters.call();
+        return IACInstance.getAdopters.call();
       })
-      .then(function (adopters) {
+      .then(function (IACrs) {
         for (i = 0; i < adopters.length; i++) {
           if (adopters[i] !== "0x0000000000000000000000000000000000000000") {
             $(".panel-pet")
@@ -92,7 +97,7 @@ App = {
       })
       .catch(function (err) {
         console.log(err.message);
-      });
+      }); */
   },
 
   handleAdopt: function (event) {
@@ -121,6 +126,72 @@ App = {
         .catch(function (err) {
           console.log(err.message);
         });
+    });
+  },
+
+  depositETH: () => {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      var account = accounts[0];
+      //alert("Depositing");
+      App.contracts.IAC.deployed()
+        .then(function (instance) {
+          IACInstance = instance;
+          if (!IACInstance) {
+            alert("Contract not deployed");
+          } else {
+            console.log(account);
+            console.log(IACInstance);
+            //alert("Contract deployed");
+          }
+
+          // Execute adopt as a transaction by sending account
+          return IACInstance.deposit({
+            from: account,
+            value: 1000000000000000000 * 2 + "",
+          }).then((result) => {
+            App.getBallance();
+          });
+        })
+        .then(function (result) {
+          return App.markAdopted();
+        })
+        .catch(function (err) {
+          console.log(err.message);
+        });
+    });
+  },
+
+  getBallance: () => {
+    console.log("Getting");
+
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      var account = accounts[0];
+      //alert("Depositing");
+      App.contracts.IAC.deployed().then(function (instance) {
+        IACInstance = instance;
+        if (!IACInstance) {
+          alert("Contract not deployed");
+        } else {
+          console.log(account);
+          console.log(IACInstance);
+          //alert("Contract deployed");
+        }
+
+        IACInstance.getBalance(account).then((result) => {
+          const eth = result / 1e18;
+          console.log({
+            result: eth,
+          });
+
+          $("#Your_Money").text(eth);
+        });
+      });
     });
   },
 };

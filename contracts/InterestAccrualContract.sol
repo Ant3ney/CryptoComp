@@ -3,7 +3,7 @@ pragma solidity ^0.5.0;
 
 contract InterestAccrualContract {
     // Time interval for doubling in seconds
-    uint256 private constant DOUBLING_PERIOD = 15;
+    uint256 private constant DOUBLING_PERIOD = 10;
 
     struct Deposit {
         uint256 amount;
