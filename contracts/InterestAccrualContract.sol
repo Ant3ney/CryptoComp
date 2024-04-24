@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.0;
 
-contract ExponentialGrowthContract {
+contract InterestAccrualContract {
     // Time interval for doubling in seconds
     uint256 private constant DOUBLING_PERIOD = 15;
 

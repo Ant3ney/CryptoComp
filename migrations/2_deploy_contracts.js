@@ -1,5 +1,5 @@
-var Adoption = artifacts.require("Adoption");
+var InterestAccrualContract = artifacts.require("InterestAccrualContract");
 
 module.exports = function (deployer) {
-  deployer.deploy(Adoption);
+  deployer.deploy(InterestAccrualContract);
 };
