@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.5.0;
 
 contract ExponentialGrowthContract {
     // Time interval for doubling in seconds
@@ -39,11 +39,14 @@ contract ExponentialGrowthContract {
 
     // Function to allow withdrawal of the entire balance
     function withdraw() public {
-        uint256 currentBalance = getBalance(msg.sender);
+       uint256 currentBalance = getBalance(msg.sender);
         require(currentBalance > 0, "Insufficient balance");
-        payable(msg.sender).transfer(currentBalance);
+
+        // Correct casting for Solidity 0.5.x
+        address payable recipient = address(uint160(msg.sender));
+        recipient.transfer(currentBalance);
 
         // Clear the deposits after withdrawal
-        delete deposits[msg.sender];
+        delete deposits[msg.sender]; 
     }
 }
