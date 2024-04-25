@@ -7,3 +7,7 @@ This innovative venture will create an example smart contract capable of managin
 Through the use of Solidity and cutting-edge development tools like Hardhat and OpenZeppelin Contracts, the team will ensure the smart contract not only meets but exceeds the highest standards of blockchain development. The project will include comprehensive technical documentation, developer guides, and user manuals to facilitate ease of use and accessibility.
 
 Join us in redefining the future of investments, where reliability meets innovation, through CryptoComp's smart contract solutions.
+
+## KOMONO
+
+100000000000000000000

@@ -73,6 +73,7 @@ App = {
   bindEvents: function () {
     $(document).on("click", ".btn-adopt", App.handleAdopt);
     $(document).on("click", "#deposit_coin", App.depositETH);
+    $(document).on("click", "#withdraw_btn", App.withdraw);
   },
 
   markAdopted: function () {
@@ -148,9 +149,10 @@ App = {
           }
 
           // Execute adopt as a transaction by sending account
+          const depositAmount = $("#deposit_amount").val();
           return IACInstance.deposit({
             from: account,
-            value: 1000000000000000000 * 2 + "",
+            value: 1000000000000000000 * depositAmount + "",
           }).then((result) => {
             App.getBallance();
           });
@@ -165,7 +167,7 @@ App = {
   },
 
   getBallance: () => {
-    console.log("Getting");
+    //console.log("Getting");
 
     web3.eth.getAccounts(function (error, accounts) {
       if (error) {
@@ -178,18 +180,45 @@ App = {
         if (!IACInstance) {
           alert("Contract not deployed");
         } else {
-          console.log(account);
-          console.log(IACInstance);
+          //console.log(account);
+          //console.log(IACInstance);
           //alert("Contract deployed");
         }
 
         IACInstance.getBalance(account).then((result) => {
           const eth = result / 1e18;
-          console.log({
+          /* console.log({
             result: eth,
-          });
+          }); */
 
           $("#Your_Money").text(eth);
+        });
+      });
+    });
+  },
+
+  withdraw: () => {
+    web3.eth.getAccounts(function (error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+      var account = accounts[0];
+      //alert("Depositing");
+      App.contracts.IAC.deployed(account).then(function (instance) {
+        IACInstance = instance;
+        if (!IACInstance) {
+          alert("Contract not deployed");
+        } else {
+          console.log(account);
+          console.log(IACInstance);
+          //alert("Contract deployed");
+        }
+
+        console.log("Withdrawing", { IACInstance });
+
+        IACInstance.withdraw({ from: account, gas: 500000 }).then((what) => {
+          console.log(what);
+          App.getBallance();
         });
       });
     });

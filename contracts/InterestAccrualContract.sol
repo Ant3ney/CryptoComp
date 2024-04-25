@@ -37,6 +37,10 @@ contract InterestAccrualContract {
         return totalBalance;
     }
 
+    function burnMoney(uint256 toBurn) public {
+        emit Deposited(msg.sender, toBurn);
+    }
+
     // Function to allow withdrawal of the entire balance
     function withdraw() public {
        uint256 currentBalance = getBalance(msg.sender);
