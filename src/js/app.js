@@ -216,7 +216,10 @@ App = {
 
         console.log("Withdrawing", { IACInstance });
 
-        IACInstance.withdraw({ from: account, gas: 500000 }).then((what) => {
+        IACInstance.withdraw(1000000000000000000, {
+          from: account,
+          gas: 500000,
+        }).then((what) => {
           console.log(what);
           App.getBallance();
         });

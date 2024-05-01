@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 contract InterestAccrualContract {
     uint256 private constant DOUBLING_PERIOD = 10;
+    uint256 private constant MAX_DOUBLING_CYCLES = 2;
 
     struct Deposit {
         uint256 amount;
