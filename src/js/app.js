@@ -71,6 +71,7 @@ App = {
   },
 
   bindEvents: function () {
+    console.log("Binding");
     $(document).on("click", ".btn-adopt", App.handleAdopt);
     $(document).on("click", "#deposit_coin", App.depositETH);
     $(document).on("click", "#withdraw_btn", App.withdraw);
@@ -131,6 +132,7 @@ App = {
   },
 
   depositETH: () => {
+    console.log("Depositing");
     web3.eth.getAccounts(function (error, accounts) {
       if (error) {
         console.log(error);
@@ -150,6 +152,7 @@ App = {
 
           // Execute adopt as a transaction by sending account
           const depositAmount = $("#deposit_amount").val();
+
           return IACInstance.deposit({
             from: account,
             value: 1000000000000000000 * depositAmount + "",
@@ -215,8 +218,8 @@ App = {
         }
 
         console.log("Withdrawing", { IACInstance });
-
-        IACInstance.withdraw(1000000000000000000, {
+        const withdrawAmount = $("#withdraw_amount").val();
+        IACInstance.withdraw(withdrawAmount * 1000000000000000000, {
           from: account,
           gas: 500000,
         }).then((what) => {

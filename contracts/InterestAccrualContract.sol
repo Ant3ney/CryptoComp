@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract InterestAccrualContract {
     uint256 private constant DOUBLING_PERIOD = 10;
-    uint256 private constant MAX_DOUBLING_CYCLES = 2;
+    uint256 private constant MAX_DOUBLING_CYCLES = 4;  // Maximum number of times the deposit can double
 
     struct Deposit {
         uint256 amount;
@@ -21,13 +21,14 @@ contract InterestAccrualContract {
         emit Deposited(msg.sender, msg.value);
     }
 
-    // Optimized getBalance function
+    // Optimized getBalance function with limited doubling
     function getBalance(address user) public view returns (uint256 totalBalance) {
         uint256 length = deposits[user].length;
         for (uint i = 0; i < length; i++) {
             Deposit storage dep = deposits[user][i];
             uint256 timeElapsed = block.timestamp - dep.timestamp;
             uint256 doublingCycles = timeElapsed / DOUBLING_PERIOD;
+            doublingCycles = (doublingCycles > MAX_DOUBLING_CYCLES) ? MAX_DOUBLING_CYCLES : doublingCycles; // Limit the doubling cycles
             totalBalance += (dep.amount << doublingCycles); // Efficient shift operation
         }
     }
@@ -56,6 +57,7 @@ contract InterestAccrualContract {
             Deposit storage dep = deposits[user][index];
             uint256 timeElapsed = block.timestamp - dep.timestamp;
             uint256 doublingCycles = timeElapsed / DOUBLING_PERIOD;
+            doublingCycles = (doublingCycles > MAX_DOUBLING_CYCLES) ? MAX_DOUBLING_CYCLES : doublingCycles;
             uint256 currentAmount = dep.amount << doublingCycles;
 
             if (currentAmount <= remainingAmount) {
