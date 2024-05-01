@@ -44,7 +44,7 @@ contract InterestAccrualContract {
     // Function to allow withdrawal of the entire balance
     function withdraw() public {
        uint256 currentBalance = getBalance(msg.sender);
-        require(currentBalance > 0, "Insufficient balance");
+       require(currentBalance > 0, "Insufficient balance");
 
         // Correct casting for Solidity 0.5.x
         address payable recipient = address(uint160(msg.sender));
